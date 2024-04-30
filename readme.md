@@ -3,3 +3,4 @@ I have placed everything in the ipython notebook for now. Please make pull reque
 
 Some links you might find useful:
 [llama2+langchain](https://zhuanlan.zhihu.com/p/652172969)
+[llama3 user guide](https://zhuanlan.zhihu.com/p/693407124)
