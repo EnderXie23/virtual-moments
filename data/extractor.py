@@ -15,7 +15,7 @@ voice_texts = soup.find_all("span", lang = "en")
 print(len(displays), "displays found.")
 print(len(voice_texts), "voice texts found.")
 
-with open("data/furina.txt", "w", encoding="utf-8") as file:
+with open("furina.txt", "w", encoding="utf-8") as file:
     for i in range(0, len(displays), 3):
         file.write(voice_texts[i].text.strip() + ".\n" + voice_texts[i + 2].text.strip() + "\n")
 
