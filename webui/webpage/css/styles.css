@@ -1,0 +1,179 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: white;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 10px 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.search-bar input {
+    padding: 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+}
+
+.nav-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.feed {
+    width: 60%;
+}
+
+.post {
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.post-user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-user-info h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.post-img {
+    width: 100%;
+}
+
+.post-footer {
+    padding: 10px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    color: #3897f0;
+    font-weight: bold;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.comments {
+    margin-top: 10px;
+    position: relative;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+.toggle-comments {
+    display: block;
+    margin: 10px 0;
+    background-color: #3897f0;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.sidebar {
+    width: 40%;
+    margin-left: 30px;
+    position: sticky;
+    top: 70px;
+}
+
+.sidebar-user-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-info, .suggestions {
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.suggestion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.suggestion-user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+button {
+    background-color: #3897f0;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#new-post-button{
+    position: sticky; /* Make button sticky */
+    top: 10px; /* Distance from the top of the viewport */
+    margin-bottom: 20px; /* Spacing between the button and the next element */
+    background-color: #3897f0;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}

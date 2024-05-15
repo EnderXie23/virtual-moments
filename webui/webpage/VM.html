@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Moments</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Virtual Moments</h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+            </div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">Messages</a>
+                <a href="#">Notifications</a>
+                <a href="#">Profile</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <button id="new-post-button">Create New Post</button>
+            <div class="feed" id="feed">
+                <!-- Placeholder for posts -->
+                <div class="post">
+                    <div class="post-header">
+                        <img src="photos/image8.png" alt="User" class="post-user-img">
+                        <div class="post-user-info">
+                            <h2>Ender</h2>
+                            <p>Beijing, China</p>
+                        </div>
+                    </div>
+                    <img src="photos/image8.png" alt="Post Image" class="post-img">
+                    <div class="post-footer">
+                        <p><strong>Furina</strong> How do I look!</p>
+                        <div class="post-actions">
+                            <button class="like-button">Like</button>
+                            <button class="comment-button">Comments</button>
+                        </div>
+                        <div class="comments">
+                            <p><strong>Neuvillete</strong> Nice post!</p>
+                            <!-- More comments... -->
+                        </div>
+                        <input type="text" class="comment-input" placeholder="Add a comment...">
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div class="user-info">
+                    <img src="photos/image8.png" alt="User" class="sidebar-user-img">
+                    <div>
+                        <h2>Ender</h2>
+                        <p>Welcome to Virtual Moments!</p>
+                    </div>
+                </div>
+                <div class="suggestions">
+                    <h3>Follow Someone!</h3>
+                    <div class="suggestion">
+                        <img src="photos/image8.png" alt="User" class="suggestion-user-img">
+                        <div>
+                            <h4>Furina</h4>
+                            <p>Followed by...</p>
+                        </div>
+                        <button>Follow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="js/script.js"></script>
+</body>
+</html>
