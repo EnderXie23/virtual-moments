@@ -1,0 +1,38 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "json",
+  "dataset_size": 6764,
+  "description": "",
+  "download_checksums": {
+    "/root/myvm/data/furina.json": {
+      "num_bytes": 8312,
+      "checksum": null
+    }
+  },
+  "download_size": 8312,
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 15076,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 6764,
+      "num_examples": 22,
+      "dataset_name": "json"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
