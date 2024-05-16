@@ -38,13 +38,20 @@ def chat_resp(model, tokenizer, user_prompt=None, history=[]):
     output = pipe(messages, **generation_args)
     return output
 
+@app.get("/{prompt}")
+async def answer(prompt: str):
+    prompt = unquote(prompt)
+    resp = chat_resp(model, tokenizer, prompt)
+    return {"message": resp[0]['generated_text'].replace('"', '')}
+
 @app.post("/post/")
 async def chat(data: dict):
     prompt = data.get('comment', '')
     comments = data.get('history', [])
-    history = [{"role": "system", "content": "Do a role play and play as character Furina. Learn from the following QA examples, then answer the final question in a similar tone:"},]
+    player = data.get('sender', '').lower()
+    history = [{"role": "system", "content": f"Do a role play and play as character {player}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
 
-    with open('/root/myvm/webui/webpage/text/furina.txt', 'r', encoding='utf-8') as file:
+    with open(f'/root/myvm/webpage/text/{player}.txt', 'r', encoding='utf-8') as file:
         lines = [line.strip() for line in file.readlines()]
 
     for i in range(0, len(lines), 2):
@@ -52,7 +59,9 @@ async def chat(data: dict):
         history.append({"role": "agent", "content": lines[i+1]})
 
     for i in range(0, len(comments)):
-        history.append({"role": "user", "content": comments[i]})
+        sender = comments[i].split(':')[0].lower()
+        sender = 'user' if sender == 'ender' else 'agent'
+        history.append({"role": sender, "content": comments[i].split(':')[1]})
 
     resp = chat_resp(model, tokenizer, prompt, history)
     return {"message": resp[0]['generated_text'].replace('"', '')}

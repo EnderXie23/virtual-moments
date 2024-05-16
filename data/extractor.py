@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
-url = "https://genshin-impact.fandom.com/wiki/Furina/Voice-Overs"
+url = "https://genshin-impact.fandom.com/wiki/Tighnari/Voice-Overs"
 response = requests.get(url)
 print("Status code: ", response.status_code)
 soup = BeautifulSoup(response.text, "html.parser")
@@ -15,7 +15,7 @@ voice_texts = soup.find_all("span", lang = "en")
 print(len(displays), "displays found.")
 print(len(voice_texts), "voice texts found.")
 
-with open("furina.txt", "w", encoding="utf-8") as file:
+with open("tighnari.txt", "w", encoding="utf-8") as file:
     for i in range(0, len(displays), 3):
         file.write(voice_texts[i].text.strip() + ".\n" + voice_texts[i + 2].text.strip() + "\n")
 

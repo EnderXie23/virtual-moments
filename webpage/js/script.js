@@ -1,3 +1,11 @@
+// Initialize the feed
+document.addEventListener('DOMContentLoaded', () => {
+    // Example usage of the function with some dummy data
+    createNewPost('Furina', 'photos/furina.png', 'Fountaine', 'So sleepy~', {'Neuvillete': "Have a good night's sleep!"});
+    createNewPost('Tighnari', 'photos/tighnari.png', 'Arusama', 'Having a great time!', {"Corei": "Are you out camping again?"});
+    
+});
+
 // Toggle follow button
 document.querySelectorAll('.suggestion button').forEach(button => {
     button.addEventListener('click', () => {
@@ -24,6 +32,26 @@ document.querySelectorAll('.like-button').forEach(button => {
     });
 });
 
+// Fetch response from the server
+async function fetchResponse(prompt){
+    const encodedPrompt = encodeURIComponent(prompt);
+    const url = `http://localhost:54225/${encodedPrompt}`;
+
+    try{
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const data = await response.json();
+        return data.message;
+    }catch(error){
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 // Comment functionality
 document.querySelectorAll('.comment-input').forEach(input => {
     input.addEventListener('keypress', async event => {
@@ -32,16 +60,18 @@ document.querySelectorAll('.comment-input').forEach(input => {
             if (commentText.trim() !== '') {
                 const commentSection = input.previousElementSibling;
                 const comments = Array.from(commentSection.querySelectorAll('p')).map(comment => comment.innerText);
-                
+                const postSender = input.closest('.post').getAttribute('data-username');
+
                 // Fill the comments history
                 const CommentData = {
+                    sender: postSender,
                     comment: commentText,
                     history: comments
                 };
 
                 // Create a new comment element
                 const newComment = document.createElement('p');
-                newComment.innerHTML = `<strong>Ender</strong> ${commentText}`;
+                newComment.innerHTML = `<strong>Ender: </strong> ${commentText}`;
                 commentSection.insertBefore(newComment, commentSection.querySelector('.toggle-comments'));
                 input.value = '';
 
@@ -56,7 +86,7 @@ document.querySelectorAll('.comment-input').forEach(input => {
                     const data = await response.json();
                     if (data.message) {
                         const responseComment = document.createElement('p');
-                        responseComment.innerHTML = `<strong>bot</strong> ${data.message}`;
+                        responseComment.innerHTML = `<strong>${postSender}: </strong> ${data.message}`;
                         commentSection.insertBefore(responseComment, commentSection.querySelector('.toggle-comments'));
                     } else {
                         console.error('Error:', data.error || 'Unknown error');
@@ -112,11 +142,12 @@ function updateCommentVisibility(commentsContainer) {
 
 
 // Create a new post
-function createNewPost(username, photoPath, location, caption) {
+function createNewPost(username, photoPath, location, caption, comments = {}) {
     const feed = document.getElementById('feed');
 
     const post = document.createElement('div');
     post.className = 'post';
+    post.setAttribute('data-username', username);
 
     post.innerHTML = `
         <div class="post-header">
@@ -128,7 +159,7 @@ function createNewPost(username, photoPath, location, caption) {
         </div>
         <img src="${photoPath}" alt="Post Image" class="post-img">
         <div class="post-footer">
-            <p><strong>${username}</strong> ${caption}</p>
+            <p style="padding-left: 5mm;">${caption}</p>
             <div class="post-actions">
                 <button class="like-button">Like</button>
                 <button class="comment-button">Comment</button>
@@ -142,7 +173,16 @@ function createNewPost(username, photoPath, location, caption) {
     `;
 
     // Append the new post to the feed
-    feed.prepend(post);
+    feed.append(post);
+
+    const commentSection = post.querySelector('.comments');
+
+    // Add existing comments
+    for (const [sender, comment] of Object.entries(comments)) {
+        const commentElement = document.createElement('p');
+        commentElement.innerHTML = `<strong>${sender}: </strong> ${comment}`;
+        commentSection.appendChild(commentElement);
+    }
 
     // Add event listeners for like and comment buttons
     post.querySelector('.like-button').addEventListener('click', function () {
@@ -159,18 +199,21 @@ function createNewPost(username, photoPath, location, caption) {
         if (event.key === 'Enter') {
             const commentText = this.value;
             if (commentText.trim() !== '') {
-                const commentSection = this.previousElementSibling;
                 const comments = Array.from(commentSection.querySelectorAll('p')).map(comment => comment.innerText);
+                const postSender = this.closest('.post').getAttribute('data-username');
+
+                console.log(comments);
                 
                 // Fill the comments history
                 const CommentData = {
+                    sender: postSender,
                     comment: commentText,
                     history: comments
                 };
 
                 // Create a new comment element
                 const newComment = document.createElement('p');
-                newComment.innerHTML = `<strong>Ender</strong> ${commentText}`;
+                newComment.innerHTML = `<strong>Ender: </strong> ${commentText}`;
                 commentSection.insertBefore(newComment, commentSection.querySelector('.toggle-comments'));
                 this.value = '';
 
@@ -185,7 +228,7 @@ function createNewPost(username, photoPath, location, caption) {
                     const data = await response.json();
                     if (data.message) {
                         const responseComment = document.createElement('p');
-                        responseComment.innerHTML = `<strong>bot</strong> ${data.message}`;
+                        responseComment.innerHTML = `<strong>${postSender}: </strong> ${data.message}`;
                         commentSection.insertBefore(responseComment, commentSection.querySelector('.toggle-comments'));
                     } else {
                         console.error('Error:', data.error || 'Unknown error');
@@ -200,12 +243,23 @@ function createNewPost(username, photoPath, location, caption) {
     });
 
     // Initial update to handle existing comments
-    const commentSection = post.querySelector('.comments');
     updateCommentVisibility(commentSection);
 }
 
 // Add event listener to the new post button
-document.getElementById('new-post-button').addEventListener('click', () => {
-    // Example usage of the function with some dummy data
-    createNewPost('john_doe', 'user.jpg', 'New York, NY', 'Having a great time!');
+document.getElementById('new-post-button').addEventListener('click', async () => {
+    const loadingIndicator = document.getElementById('loading-indicator');
+    loadingIndicator.style.display = 'block';
+
+    try{
+        prompt1 = "Suppose you are a person named Furina. You are in Fountaine on vacation. You want to send a post to your friends. Write a post about your vacation in 10 words.";
+        caption = await fetchResponse(prompt1);
+        prompt2 = "Suppose you are a person named Neuvillete. You are a friend of Furina. You want to comment on Furina's post about vacation: " + caption + ". Write a comment only in 15 words.";
+        comment = await fetchResponse(prompt2);
+        createNewPost('Furina', 'photos/furina.png', 'Fountaine', caption, {'Neuvillete': comment});
+    }catch(error){
+        console.error('Error:', error);
+    }finally{
+        loadingIndicator.style.display = 'none';
+    }
 });

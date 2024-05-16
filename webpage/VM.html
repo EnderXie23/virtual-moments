@@ -12,10 +12,10 @@
             <div class="logo">
                 <h1>Virtual Moments</h1>
             </div>
-            <div class="search-bar">
+            <div class="search-bar" style="padding-top: 5mm;">
                 <input type="text" placeholder="Search">
             </div>
-            <div class="nav-links">
+            <div class="nav-links" style="padding-top: 5mm;">
                 <a href="#">Home</a>
                 <a href="#">Messages</a>
                 <a href="#">Notifications</a>
@@ -28,32 +28,22 @@
             <button id="new-post-button">Create New Post</button>
             <div class="feed" id="feed">
                 <!-- Placeholder for posts -->
-                <div class="post">
+                <div class="post" data-username="user">
                     <div class="post-header">
-                        <img src="photos/image8.png" alt="User" class="post-user-img">
+                        <img src="photos/user.png" alt="User" class="post-user-img">
                         <div class="post-user-info">
                             <h2>Ender</h2>
-                            <p>Beijing, China</p>
                         </div>
                     </div>
-                    <img src="photos/image8.png" alt="Post Image" class="post-img">
                     <div class="post-footer">
-                        <p><strong>Furina</strong> How do I look!</p>
-                        <div class="post-actions">
-                            <button class="like-button">Like</button>
-                            <button class="comment-button">Comments</button>
-                        </div>
-                        <div class="comments">
-                            <p><strong>Neuvillete</strong> Nice post!</p>
-                            <!-- More comments... -->
-                        </div>
-                        <input type="text" class="comment-input" placeholder="Add a comment...">
+                        <p style="text-align: center; font-size:x-large;">Enjoy Virtual Moments!</p>
                     </div>
                 </div>
+                <div id="loading-indicator" style="display: none;">Loading new post...</div>
             </div>
             <div class="sidebar">
                 <div class="user-info">
-                    <img src="photos/image8.png" alt="User" class="sidebar-user-img">
+                    <img src="photos/user.png" alt="User" class="sidebar-user-img">
                     <div>
                         <h2>Ender</h2>
                         <p>Welcome to Virtual Moments!</p>
@@ -62,7 +52,7 @@
                 <div class="suggestions">
                     <h3>Follow Someone!</h3>
                     <div class="suggestion">
-                        <img src="photos/image8.png" alt="User" class="suggestion-user-img">
+                        <img src="photos/user.png" alt="User" class="suggestion-user-img">
                         <div>
                             <h4>Furina</h4>
                             <p>Followed by...</p>
