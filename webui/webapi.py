@@ -31,9 +31,10 @@ def chat_resp(model, tokenizer, user_prompt=None, history=[]):
 @app.post("/chat/")
 async def chat(data: dict):
     prompt = data.get('prompt', '')
-    history = [{"role": "system", "content": "Do a role play and play as character Furina. Learn from the following QA examples, then answer the final question in a similar tone:"},]
+    history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
+    character = data.get('character', 'Furina').lower()
 
-    with open("/root/myvm/data/furina2.txt", 'r', encoding='utf-8') as file:
+    with open(f"/root/myvm/webpage/text/{character}.txt", 'r', encoding='utf-8') as file:
         lines = [line.strip() for line in file.readlines()]
 
     for i in range(0, len(lines), 2):
