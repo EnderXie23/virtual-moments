@@ -38,10 +38,21 @@ def chat_resp(model, tokenizer, user_prompt=None, history=[]):
     output = pipe(messages, **generation_args)
     return output
 
-@app.get("/{prompt}")
-async def answer(prompt: str):
+@app.get("/answer/")
+async def answer(prompt: str, character: str):
     prompt = unquote(prompt)
-    resp = chat_resp(model, tokenizer, prompt)
+    if character != 'None':
+        character = character.lower()
+        history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
+        with open(f'/root/myvm/webpage/text/{character}.txt', 'r', encoding='utf-8') as file:
+            lines = [line.strip() for line in file.readlines()]
+
+        for i in range(0, len(lines), 2):
+            history.append({"role": "user", "content": lines[i]})
+            history.append({"role": "agent", "content": lines[i+1]})
+        resp = chat_resp(model, tokenizer, prompt, history)
+    else:
+        resp = chat_resp(model, tokenizer, prompt)
     return {"message": resp[0]['generated_text'].replace('"', '')}
 
 @app.post("/post/")
