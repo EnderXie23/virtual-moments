@@ -16,7 +16,7 @@ def chat_resp(model, tokenizer, user_prompt=None, history=[]):
         tokenizer=tokenizer,
     )   
     generation_args = {
-        "max_new_tokens": 100,
+        "max_new_tokens": 500,
         "return_full_text": False,
         "temperature": 0.6,
         "do_sample": True,
@@ -31,9 +31,9 @@ def chat_resp(model, tokenizer, user_prompt=None, history=[]):
 @app.post("/chat/")
 async def chat(data: dict):
     prompt = data.get('prompt', '')
-    history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
     character = data.get('character', 'Furina').lower()
-
+    history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone within 50 words:"},]
+    
     with open(f"/root/myvm/webpage/text/{character}.txt", 'r', encoding='utf-8') as file:
         lines = [line.strip() for line in file.readlines()]
 

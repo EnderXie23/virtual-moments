@@ -84,4 +84,4 @@ if __name__ == '__main__':
                                              device_map="cuda:0", 
                                              torch_dtype="auto", 
                                              trust_remote_code=True)
-    uvicorn.run(app, host='0.0.0.0', port=54225, workers=1)
+    uvicorn.run(app, host='0.0.0.0', port=54226, workers=1)

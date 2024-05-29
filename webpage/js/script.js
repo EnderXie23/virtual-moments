@@ -1,41 +1,15 @@
 // Initialize the feed
 document.addEventListener('DOMContentLoaded', () => {
     // Example usage of the function with some dummy data
-    createNewPost('Furina', 'photos/furina.png', 'Fountaine', 'So sleepy~', {'Neuvillete': "Have a good night's sleep!"});
-    createNewPost('Tighnari', 'photos/tighnari.png', 'Arusama', 'Having a great time!', {"Corei": "Are you out camping again?"});
-    
-});
-
-// Toggle follow button
-document.querySelectorAll('.suggestion button').forEach(button => {
-    button.addEventListener('click', () => {
-        if (button.innerText === 'Follow') {
-            button.innerText = 'Following';
-            button.style.backgroundColor = '#ccc';
-        } else {
-            button.innerText = 'Follow';
-            button.style.backgroundColor = '#3897f0';
-        }
-    });
-});
-
-// Like button functionality
-document.querySelectorAll('.like-button').forEach(button => {
-    button.addEventListener('click', () => {
-        if (button.classList.contains('liked')) {
-            button.classList.remove('liked');
-            button.innerText = 'Like';
-        } else {
-            button.classList.add('liked');
-            button.innerText = 'Liked';
-        }
-    });
+    createNewPost('Furina', 'photos/fpost.png', 'Fountaine', 'How do you like my new outfit~', {'Neuvillete': "Furina's new dress is fantastic!"});
+    createNewPost('Tighnari', 'photos/tighnari.png', 'Arusama', 'Having a great time in the forest!', {"Corei": "Are you out camping again?"});
+    createNewPost('Iron', 'photos/ipost.png', 'The U.S.', "Built myself a cool new suit!", {"Pepper": "Iron Man is so talented!"});
 });
 
 // Fetch response from the server
-async function fetchResponse(prompt){
+async function fetchResponse(prompt, character = 'None'){
     const encodedPrompt = encodeURIComponent(prompt);
-    const url = `http://localhost:54225/${encodedPrompt}`;
+    const url = `http://localhost:54226/answer?prompt=${encodedPrompt}&character=${character}`;
 
     try{
         const response = await fetch(url, {
@@ -51,6 +25,59 @@ async function fetchResponse(prompt){
         return null;
     }
 }
+
+// Toggle follow button
+document.querySelectorAll('.suggestion button').forEach(button => {
+    button.addEventListener('click', () => {
+        if (button.innerText === 'Follow') {
+            button.innerText = 'Following';
+            button.style.backgroundColor = '#ccc';
+        } else {
+            button.innerText = 'Follow';
+            button.style.backgroundColor = '#3897f0';
+        }
+    });
+});
+
+// Like button functionality
+async function handleLikeButtonClick(button) {
+    const postElement = button.closest('.post');
+    const postSender = postElement.getAttribute('data-username');
+    const commentSection = postElement.querySelector('.comments');
+    const caption = postElement.querySelector('.post-footer p').innerText;
+
+    try {
+        // Generate a comment based on the caption
+        const prompt = `A friend Ender liked your post: "${caption}". Write a comment to thank him WITHIN 15 words.`;
+        const comment = await fetchResponse(prompt, postSender);
+
+        if (comment) {
+            const responseComment = document.createElement('p');
+            responseComment.innerHTML = `<strong>${postSender}: </strong> ${comment}`;
+            commentSection.insertBefore(responseComment, commentSection.querySelector('.toggle-comments'));
+            updateCommentVisibility(commentSection);
+        } else {
+            console.error('Error: Failed to fetch bot response');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+document.querySelectorAll('.like-button').forEach(button => {
+    button.addEventListener('click', async function () {
+        if (this.classList.contains('liked')) {
+            this.classList.remove('liked');
+            this.innerText = 'Like';
+        } else {
+            this.classList.add('liked');
+            this.innerText = 'Liked';
+
+            // Handle the like button click
+            await handleLikeButtonClick(this);
+        }
+    });
+});
 
 // Comment functionality
 document.querySelectorAll('.comment-input').forEach(input => {
@@ -76,7 +103,7 @@ document.querySelectorAll('.comment-input').forEach(input => {
                 input.value = '';
 
                 try {
-                    const response = await fetch('http://localhost:54225/post/', {
+                    const response = await fetch('http://localhost:54226/post/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -130,9 +157,7 @@ function updateCommentVisibility(commentsContainer) {
             toggleButton.addEventListener('click', () => {
                 const isHidden = comments[0].style.display === 'none';
                 comments.forEach((comment, index) => {
-                    if (index < commentCount - 3) {
-                        comment.style.display = isHidden ? 'block' : 'none';
-                    }
+                    comment.style.display = isHidden ? 'block' : 'none';
                 });
                 toggleButton.innerText = isHidden ? 'Show fewer comments' : 'Show more comments';
             });
@@ -149,15 +174,21 @@ function createNewPost(username, photoPath, location, caption, comments = {}) {
     post.className = 'post';
     post.setAttribute('data-username', username);
 
-    post.innerHTML = `
+    let postContent = `
         <div class="post-header">
-            <img src="${photoPath}" alt="User" class="post-user-img">
+            <img src="photos/${username.toLowerCase()}.png" alt="User" class="post-user-img">
             <div class="post-user-info">
                 <h2>${username}</h2>
                 <p>${location}</p>
             </div>
-        </div>
-        <img src="${photoPath}" alt="Post Image" class="post-img">
+        </div>`;
+
+    // Conditionally include the post image
+    if (photoPath && photoPath !== 'null') {
+        postContent += `<img src="${photoPath}" alt="Post Image" class="post-img">`;
+    }
+
+    postContent += `
         <div class="post-footer">
             <p style="padding-left: 5mm;">${caption}</p>
             <div class="post-actions">
@@ -171,6 +202,8 @@ function createNewPost(username, photoPath, location, caption, comments = {}) {
             <input type="text" class="comment-input" placeholder="Add a comment...">
         </div>
     `;
+    
+    post.innerHTML = postContent;
 
     // Append the new post to the feed
     feed.append(post);
@@ -185,14 +218,19 @@ function createNewPost(username, photoPath, location, caption, comments = {}) {
     }
 
     // Add event listeners for like and comment buttons
-    post.querySelector('.like-button').addEventListener('click', function () {
-        if (this.classList.contains('liked')) {
-            this.classList.remove('liked');
-            this.innerText = 'Like';
-        } else {
-            this.classList.add('liked');
-            this.innerText = 'Liked';
-        }
+    post.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', async function () {
+            if (this.classList.contains('liked')) {
+                this.classList.remove('liked');
+                this.innerText = 'Like';
+            } else {
+                this.classList.add('liked');
+                this.innerText = 'Liked';
+    
+                // Handle the like button click
+                await handleLikeButtonClick(this);
+            }
+        });
     });
 
     post.querySelector('.comment-input').addEventListener('keypress', async function (event) {
@@ -218,7 +256,7 @@ function createNewPost(username, photoPath, location, caption, comments = {}) {
                 this.value = '';
 
                 try {
-                    const response = await fetch('http://localhost:54225/post/', {
+                    const response = await fetch('http://localhost:54226/post/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -246,17 +284,27 @@ function createNewPost(username, photoPath, location, caption, comments = {}) {
     updateCommentVisibility(commentSection);
 }
 
+const cfPairs = [
+    { character: 'Furina', friend: 'Neuvillete', place: 'Fountaine'},
+    { character: 'Tighnari', friend: 'Corei', place: 'Arusama'},
+    { character: 'Iron', friend: 'Pepper', place: 'The U.S.'},
+    { character: 'Jack', friend: 'Sailor', place: 'The Atlantic Ocean' },
+]
+
 // Add event listener to the new post button
 document.getElementById('new-post-button').addEventListener('click', async () => {
     const loadingIndicator = document.getElementById('loading-indicator');
     loadingIndicator.style.display = 'block';
 
+    const randomPair = cfPairs[Math.floor(Math.random() * cfPairs.length)];
+    const { character, friend, place} = randomPair;
+
     try{
-        prompt1 = "Suppose you are a person named Furina. You are in Fountaine on vacation. You want to send a post to your friends. Write a post about your vacation in 10 words.";
-        caption = await fetchResponse(prompt1);
-        prompt2 = "Suppose you are a person named Neuvillete. You are a friend of Furina. You want to comment on Furina's post about vacation: " + caption + ". Write a comment only in 15 words.";
+        prompt1 = "Suppose you are a person named " + character + ". You are on summer vacation. You want to send a post to share with your friends about your trip. Write a post about your vacation WITHIN 10 words.";
+        caption = await fetchResponse(prompt1, character);
+        prompt2 = "Suppose you are a person named " + friend + ". You are a friend of " + character +". You want to comment on " + character + "'s post about vacation: " + caption + ". Write a comment WITHIN 15 words.";
         comment = await fetchResponse(prompt2);
-        createNewPost('Furina', 'photos/furina.png', 'Fountaine', caption, {'Neuvillete': comment});
+        createNewPost(character, 'null', place, caption, {[friend]: comment});
     }catch(error){
         console.error('Error:', error);
     }finally{

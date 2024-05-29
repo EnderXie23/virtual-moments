@@ -49,17 +49,64 @@
                         <p>Welcome to Virtual Moments!</p>
                     </div>
                 </div>
-                <div class="suggestions">
-                    <h3>Follow Someone!</h3>
-                    <div class="suggestion">
-                        <img src="photos/user.png" alt="User" class="suggestion-user-img">
+                <div class="friends">
+                    <h3>Your Friends:</h3>
+                    <div class="friend">
+                        <img src="photos/furina.png" alt="Furina" class="friend-user-img">
                         <div>
                             <h4>Furina</h4>
-                            <p>Followed by...</p>
+                            <p>Available</p>
                         </div>
-                        <button>Follow</button>
+                        <button onclick="chatWithFriend(7861)">Chat...</button>
+                    </div>
+                    <div class="friend">
+                        <img src="photos/tighnari.png" alt="Tighnari" class="friend-user-img">
+                        <div>
+                            <h4>Tighnari</h4>
+                            <p>Available</p>
+                        </div>
+                        <button onclick="chatWithFriend(7862)">Chat...</button>
+                    </div>
+                    <div class="friend">
+                        <img src="photos/iron.png" alt="Iron Man" class="friend-user-img">
+                        <div>
+                            <h4>Iron Man</h4>
+                            <p>Available</p>
+                        </div>
+                        <button onclick="chatWithFriend(7863)">Chat...</button>
+                    </div>
+                    <div class="friend">
+                        <img src="photos/jack.png" alt="Jack Sparrow" class="friend-user-img">
+                        <div>
+                            <h4>Jack Sparrow</h4>
+                            <p>Available</p>
+                        </div>
+                        <button onclick="chatWithFriend(7864)">Chat...</button>
+                    </div>
+                    <div class="friend">
+                        <img src="photos/tighnari.png" alt="Tighnari" class="friend-user-img">
+                        <div>
+                            <h4>Tighnari</h4>
+                            <p>Available</p>
+                        </div>
+                        <button onclick="chatWithFriend(7862)">Chat...</button>
+                    </div>
+                    <div class="friend">
+                        <img src="photos/tighnari.png" alt="Tighnari" class="friend-user-img">
+                        <div>
+                            <h4>Tighnari</h4>
+                            <p>Available</p>
+                        </div>
+                        <button onclick="chatWithFriend(7862)">Chat...</button>
                     </div>
                 </div>
+
+                <script>
+                    function chatWithFriend(friendId) {
+                        // Open a new chat window with the friend
+                        window.open('http://127.0.0.1:' + friendId, "_blank");
+                    }
+                </script>
             </div>
         </div>
     </main>
