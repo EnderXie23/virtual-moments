@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Moments</title>
+    <link rel="stylesheet" href="css/chatstyles.css">
+</head>
+<body>
+<main>
+    <div class="container">
+        <div class="chatleft">
+            <div class="header">
+                <div class="img">
+                <img src="../../webpage/photos/user.png" class="cover">
+                </div>
+                <div class="icons">
+                    <li><img src="icons/vm_white.png"></li>
+                </div>
+            </div>
+            <div class="chatlist">
+                <li id="Furina" class="block">
+                    <div class="imgbx">
+                        <img src="../../webpage/photos/furina.png" class="cover">
+                    </div>  
+                    <h4>Furina</h4>  
+                    <div class="location">Fountaine</div>
+                </li>
+                <li id="Iron Man" class="block">
+                    <div class="imgbx">
+                        <img src="../../webpage/photos/iron.png" class="cover">
+                    </div>  
+                    <h4>Ironman</h4>  
+                    <div class="location">The U.S.</div>
+                </li>
+                <li id="Jack Sparrow" class="block">
+                    <div class="imgbx">
+                        <img src="../../webpage/photos/jack.png" class="cover">
+                    </div>  
+                    <h4>Jack Sparrow</h4>  
+                    <div class="location">The Atlantic Ocean</div>
+                </li>
+                <li id="Tighnari" class="block">
+                    <div class="imgbx">
+                        <img src="../../webpage/photos/tighnari.png" class="cover">
+                    </div>  
+                    <h4>Tighnari</h4>  
+                    <div class="location">Corei</div>
+                </li>
+            </div>
+        </div>
+        <!--chatright-->
+        <div class="chatright">
+            <!--chatheader-->
+            <div class="header">
+                <div class="img">
+                    <img id="curimg" src="../../webpage/photos/furina.png" class="cover">
+                </div>
+                <div class="imgText">
+                <h4 id="curname">Furina<span>Online</span></h4>
+                </div>
+            </div>
+            <!--chatbox-->
+            <div id="rightchatBox" class="chatBox">
+
+            </div>
+            <!--chatinput-->
+            <div class="chatbox_input">
+            <input id="textArea" type="text" placeholder="Type a message">
+            <button onclick="getInput()">Send</button>    
+            </div>
+    </div>
+    </div>
+</main>
+    <script src="js/chatscript.js"></script>
+</body>
+</html>

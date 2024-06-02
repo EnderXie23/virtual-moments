@@ -5,6 +5,8 @@ import threading
 
 API_SERVER_URL = "http://localhost:54225/chat" # Don't forget to start your local API server
 
+
+
 def predict(message, history, character):
     url = API_SERVER_URL
     data = {"prompt": message,

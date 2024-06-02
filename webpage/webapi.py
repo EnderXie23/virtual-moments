@@ -5,10 +5,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import uvicorn
+import torch
 
 from urllib.parse import unquote
 
 app = FastAPI()
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Set up CORS
 app.add_middleware(
@@ -44,7 +47,8 @@ async def answer(prompt: str, character: str):
     if character != 'None':
         character = character.lower()
         history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
-        with open(f'/root/myvm/webpage/text/{character}.txt', 'r', encoding='utf-8') as file:
+        file_path=os.path.join(current_dir, 'text', f'{character}.txt')
+        with open(file_path, 'r', encoding='utf-8') as file:
             lines = [line.strip() for line in file.readlines()]
 
         for i in range(0, len(lines), 2):
@@ -61,8 +65,9 @@ async def chat(data: dict):
     comments = data.get('history', [])
     player = data.get('sender', '').lower()
     history = [{"role": "system", "content": f"Do a role play and play as character {player}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
-
-    with open(f'/root/myvm/webpage/text/{player}.txt', 'r', encoding='utf-8') as file:
+############implement change here
+    file_path=os.path.join(current_dir, 'text', f'{player}.txt')
+    with open(file_path, 'r', encoding='utf-8') as file:
         lines = [line.strip() for line in file.readlines()]
 
     for i in range(0, len(lines), 2):
@@ -85,3 +90,4 @@ if __name__ == '__main__':
                                              torch_dtype="auto", 
                                              trust_remote_code=True)
     uvicorn.run(app, host='0.0.0.0', port=54226, workers=1)
+

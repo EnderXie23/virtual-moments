@@ -9,6 +9,8 @@ from urllib.parse import unquote
 
 app = FastAPI()
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 def chat_resp(model, tokenizer, user_prompt=None, history=[]):
     pipe = pipeline(
         "text-generation",
@@ -33,8 +35,9 @@ async def chat(data: dict):
     prompt = data.get('prompt', '')
     character = data.get('character', 'Furina').lower()
     history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone within 50 words:"},]
-    
-    with open(f"/root/myvm/webpage/text/{character}.txt", 'r', encoding='utf-8') as file:
+    ##### implement change here
+    file_path = os.path.join(current_dir, '../webpage/text', f'{character}.txt')
+    with open(file_path, 'r', encoding='utf-8') as file:
         lines = [line.strip() for line in file.readlines()]
 
     for i in range(0, len(lines), 2):
