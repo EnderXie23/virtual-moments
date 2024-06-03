@@ -53,7 +53,7 @@ async def answer(prompt: str, character: str):
 
         for i in range(0, len(lines), 2):
             history.append({"role": "user", "content": lines[i]})
-            history.append({"role": "agent", "content": lines[i+1]})
+            history.append({"role": "assistant", "content": lines[i+1]})
         resp = chat_resp(model, tokenizer, prompt, history)
     else:
         resp = chat_resp(model, tokenizer, prompt)
@@ -65,23 +65,43 @@ async def chat(data: dict):
     comments = data.get('history', [])
     player = data.get('sender', '').lower()
     history = [{"role": "system", "content": f"Do a role play and play as character {player}. Learn from the following QA examples, then answer the final question in a similar tone:"},]
-############implement change here
     file_path=os.path.join(current_dir, 'text', f'{player}.txt')
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = [line.strip() for line in file.readlines()]
 
     for i in range(0, len(lines), 2):
         history.append({"role": "user", "content": lines[i]})
-        history.append({"role": "agent", "content": lines[i+1]})
+        history.append({"role": "assistant", "content": lines[i+1]})
 
     for i in range(0, len(comments)):
         sender = comments[i].split(':')[0].lower()
-        sender = 'user' if sender == 'ender' else 'agent'
+        sender = 'user' if sender == 'ender' else 'assistant'
         history.append({"role": sender, "content": comments[i].split(':')[1]})
 
     resp = chat_resp(model, tokenizer, prompt, history)
     return {"message": resp[0]['generated_text'].replace('"', '')}
     
+@app.post("/chat/")
+async def chat(data: dict):
+    prompt = data.get('prompt', '')
+    character = data.get('character', 'Furina').lower()
+    history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then chat with the user in a similar tone and each answer shoule be within 50 words:"},]
+    file_path = os.path.join(current_dir, '../webpage/text', f'{character}.txt')
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = [line.strip() for line in file.readlines()]
+
+    for i in range(0, len(lines), 2):
+        history.append({"role": "user", "content": lines[i]})
+        history.append({"role": "assistant", "content": lines[i+1]})
+    
+    history.append({"role": "system", "content": "Now, chat with the user in a similar tone as the QA examples above and each answer should be within 50 words:"})
+        
+    histories = data.get('history', [])
+    history+=histories
+    print(history)
+    resp = chat_resp(model, tokenizer, prompt, history)
+    return resp[0]['generated_text'].replace('"', '')
+
 if __name__ == '__main__':
     model_path = '/ssdshare/Phi-3-mini-128k-instruct/'
     tokenizer = AutoTokenizer.from_pretrained(model_path)
