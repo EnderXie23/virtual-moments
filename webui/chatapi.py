@@ -2,12 +2,21 @@ import os
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
          
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
 from urllib.parse import unquote
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 设置允许的来源，也可以是一个列表，如 ["http://localhost", "https://example.com"]
+    allow_credentials=False,  # 是否允许发送身份验证凭据（如 cookies）
+    allow_methods=["POST"],  # 允许的 HTTP 方法，也可以是一个列表，如 ["GET", "POST", "PUT"]
+    allow_headers=["*"],  # 允许的请求头，也可以是一个列表，如 ["X-Custom-Header"]
+)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -34,7 +43,8 @@ def chat_resp(model, tokenizer, user_prompt=None, history=[]):
 async def chat(data: dict):
     prompt = data.get('prompt', '')
     character = data.get('character', 'Furina').lower()
-    history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone within 50 words:"},]
+    #history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then answer the final question in a similar tone within 50 words:"},]
+    history = [{"role": "system", "content": f"Do a role play and play as character {character}. Learn from the following QA examples, then chat with the user in a similar tone and each answer shoule be within 50 words:"},]
     ##### implement change here
     file_path = os.path.join(current_dir, '../webpage/text', f'{character}.txt')
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -44,11 +54,11 @@ async def chat(data: dict):
         history.append({"role": "user", "content": lines[i]})
         history.append({"role": "agent", "content": lines[i+1]})
     
+    history.append({"role": "system", "content": "Now, chat with the user in a similar tone as the QA examples above and each answer should be within 50 words:"})
+        
     histories = data.get('history', [])
-    for i in range(0, len(histories)):
-        history.append({"role": "user", "content": histories[i][0]})
-        history.append({"role": "agent", "content": histories[i][1]})
-
+    history+=histories
+    print(history)
     resp = chat_resp(model, tokenizer, prompt, history)
     return resp[0]['generated_text'].replace('"', '')
     

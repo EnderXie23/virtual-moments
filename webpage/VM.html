@@ -57,7 +57,7 @@
                             <h4>Furina</h4>
                             <p>Available</p>
                         </div>
-                        <button onclick="chatWithFriend(7861)">Chat...</button>
+                        <button onclick="chatWithFriend('Furina')">Chat...</button>
                     </div>
                     <div class="friend">
                         <img src="photos/tighnari.png" alt="Tighnari" class="friend-user-img">
@@ -65,7 +65,7 @@
                             <h4>Tighnari</h4>
                             <p>Available</p>
                         </div>
-                        <button onclick="chatWithFriend(7862)">Chat...</button>
+                        <button onclick="chatWithFriend('Tighnari')">Chat...</button>
                     </div>
                     <div class="friend">
                         <img src="photos/iron.png" alt="Iron Man" class="friend-user-img">
@@ -73,7 +73,7 @@
                             <h4>Iron Man</h4>
                             <p>Available</p>
                         </div>
-                        <button onclick="chatWithFriend(7863)">Chat...</button>
+                        <button onclick="chatWithFriend('Iron Man')">Chat...</button>
                     </div>
                     <div class="friend">
                         <img src="photos/jack.png" alt="Jack Sparrow" class="friend-user-img">
@@ -81,7 +81,7 @@
                             <h4>Jack Sparrow</h4>
                             <p>Available</p>
                         </div>
-                        <button onclick="chatWithFriend(7864)">Chat...</button>
+                        <button onclick="chatWithFriend('Jack Sparrow')">Chat...</button>
                     </div>
                     <div class="friend">
                         <img src="photos/tighnari.png" alt="Tighnari" class="friend-user-img">
@@ -104,7 +104,8 @@
                 <script>
                     function chatWithFriend(friendId) {
                         // Open a new chat window with the friend
-                        window.open('http://127.0.0.1:' + friendId, "_blank");
+                        const url = `../chatpage/ChatUI.html?param1=${encodeURIComponent(friendId)}`;
+                        window.location.href = url;
                     }
                 </script>
             </div>

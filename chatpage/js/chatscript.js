@@ -1,6 +1,5 @@
 
-
-API_SERVER_URL = "http://localhost:54225/chat" 
+API_SERVER_URL = "http://localhost:54225/chat/" 
 
 const cfPairs=[
     {character:"Furina",file:"../../webpage/photos/furina.png"},
@@ -11,73 +10,59 @@ const cfPairs=[
 
 var curfriend=cfPairs[0]
 
-var inputValue="dede";
+var hist=[];
+
+var inputValue="";
+
+const params = new URLSearchParams(window.location.search);
+const param1 = params.get('param1');
+
+for(let i=0;i<cfPairs.length;i++){
+    if(cfPairs[i].character==param1){
+        curfriend=cfPairs[i];
+    }
+}
+
+document.getElementById(curfriend.character).classList.add("active");
+document.getElementById("curimg").setAttribute("src",curfriend.file);
+document.getElementById("curname").innerHTML=curfriend.character + "<span>online</span>";
 
 async function fetchResponse(prompt, character = 'None', history=[]){
-    url = API_SERVER_URL
+    const url = API_SERVER_URL
+
     const data={
         "prompt":prompt,
         "character":character,
         "history":history
         }
 
-    const response = await fetch('http://localhost:54225/chat', {
+    try {
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-    });
-
-    const result = await response.json();
-            const botMessage = result.generated_text.replace(/"/g, '');
-            return botMessage;
-}
-
-function getHistory(){
-    alert("getHistory");
-    const chatBox = document.getElementById('rightchatBox');
-        const messages = chatBox.getElementsByClassName('message');
-        const history = [];
-        alert("messages");
-        for (let i = 0; i < messages.length; i++) {
-            const msgClass = messages[i].classList.contains('my_message') ? 'user' : 'agent';
-            const msgContent = messages[i].getElementByClassName('p');
-            history.push({"role":msgClass, "content":msgContent.textContent});
-        }
-        alert("history");
-        alert(history);
-        return history;
-}
-
-/*
-async function fetchresponse(prompt, character = 'None'){
-    const encodedPrompt = encodeURIComponent(prompt);
-    const url = `http://localhost:54226/answer?prompt=${encodedPrompt}&character=${character}`;
-
-    try{
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
         });
-        const data = await response.json();
-        return data.message;
-    }catch(error){
-        console.error('Error:', error);
-        return null;
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        let responseText = await response.text();
+        responseText = responseText.replace(/"/g, '');
+        return responseText;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
     }
 }
-*/
-
 
 async function getResponse(prompt){
-    alert("getResponse");
     if(prompt.length==0){
      return;}
-    var history = getHistory();
-    response = await fetchResponse(prompt, curfriend.character.toLowerCase(), history);
+    response = await fetchResponse(prompt, curfriend.character.toLowerCase(), hist);
+    hist.push({"role":"user", "content":prompt});
+    hist.push({"role":"agent", "content":response});
     return response;
 }
 
@@ -86,15 +71,11 @@ async function getInput() {
     inputValue = inputbar.value;
     inputbar.value="";
 
-    sendMessage();
+    myMessage(inputValue);
 
     var response=await getResponse(inputValue);
 
     friMessage(response);
-}
-
-function sendMessage(){
-    myMessage(inputValue);
 }
 
 function myMessage(content){
@@ -116,6 +97,7 @@ function myMessage(content){
 }
 
 function friMessage(content){
+
     var frinewchat=document.createElement("div");
     frinewchat.classList.add("message","frnd_message");
 
@@ -133,7 +115,11 @@ function friMessage(content){
     document.getElementById("rightchatBox").appendChild(frinewchat);
 }
 
-
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        getInput(); 
+    }
+}
 
 
 for(let i=0;i<cfPairs.length;i++){
@@ -147,6 +133,8 @@ for(let i=0;i<cfPairs.length;i++){
             chatbox.removeChild(chatbox.firstChild);
         }
 
+        hist=[];
+
         for(let j=0;j<cfPairs.length;j++){
             if(j!=i){
                 document.getElementById(cfPairs[j].character).classList.remove("active");
@@ -157,6 +145,6 @@ for(let i=0;i<cfPairs.length;i++){
         curimg.setAttribute("src",cfPairs[i].file);
 
         var curname=document.getElementById("curname");
-        curname.innerHTML=cfPairs[i].character;
+        curname.innerHTML=cfPairs[i].character + "<span>online</span>";
     }
 }

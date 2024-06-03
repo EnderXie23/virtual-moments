@@ -15,7 +15,9 @@
                 <img src="../../webpage/photos/user.png" class="cover">
                 </div>
                 <div class="icons">
+                    <a href="../webpage/VM.html">
                     <li><img src="icons/vm_white.png"></li>
+                    </a>
                 </div>
             </div>
             <div class="chatlist">
@@ -66,7 +68,7 @@
             </div>
             <!--chatinput-->
             <div class="chatbox_input">
-            <input id="textArea" type="text" placeholder="Type a message">
+            <input id="textArea" type="text" placeholder="Type a message" onkeypress="handleKeyPress(event)">
             <button onclick="getInput()">Send</button>    
             </div>
     </div>

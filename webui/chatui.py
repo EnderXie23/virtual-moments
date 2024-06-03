@@ -3,7 +3,7 @@ import requests
 import json
 import threading
 
-API_SERVER_URL = "http://localhost:54225/chat" # Don't forget to start your local API server
+API_SERVER_URL = "http://localhost:54225/chat/" # Don't forget to start your local API server
 
 
 
