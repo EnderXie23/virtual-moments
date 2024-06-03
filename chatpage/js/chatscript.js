@@ -1,19 +1,25 @@
 
-API_SERVER_URL = "http://localhost:54225/chat/" 
+API_SERVER_URL = "http://localhost:54226/chat/" 
 
 const cfPairs=[
-    {character:"Furina",file:"../../webpage/photos/furina.png"},
-    {character:"Iron", file:"../../webpage/photos/iron.png"},
-    {character:"Jimmy", file:"../../webpage/photos/jimmy.png"},
-    {character:"Nick", file:"../../webpage/photos/nick.png"},
-    {character:"Jack", file:"../../webpage/photos/jack.png"},
-    {character:"Tighnari", file:"../../webpage/photos/tighnari.png"},
+    {character:"Furina",file:"../webpage/photos/furina.png"},
+    {character:"Iron", file:"../webpage/photos/iron.png"},
+    {character:"Jimmy", file:"../webpage/photos/jimmy.png"},
+    {character:"Nick", file:"../webpage/photos/nick.png"},
+    {character:"Jack", file:"../webpage/photos/jack.png"},
+    {character:"Tighnari", file:"../webpage/photos/tighnari.png"},
 ]
 
 var curfriend=cfPairs[0]
-
+var chatHistories = {
+    "Furina": [],
+    "Iron": [],
+    "Jimmy": [],
+    "Nick": [],
+    "Jack": [],
+    "Tighnari": []
+};
 var hist=[];
-
 var inputValue="";
 
 const params = new URLSearchParams(window.location.search);
@@ -60,7 +66,8 @@ async function fetchResponse(prompt, character = 'None', history=[]){
 
 async function getResponse(prompt){
     if(prompt.length==0){
-     return;}
+     return;
+    }
     response = await fetchResponse(prompt, curfriend.character.toLowerCase(), hist);
     hist.push({"role":"user", "content":prompt});
     hist.push({"role":"agent", "content":response});
@@ -79,6 +86,11 @@ async function getInput() {
     friMessage(response);
 }
 
+function scrollToBottom() {
+    var chatBox = document.getElementById("rightchatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
 function myMessage(content){
     var mynewchat=document.createElement("div");
     mynewchat.classList.add("message","my_message");
@@ -95,10 +107,11 @@ function myMessage(content){
     newcontent.appendChild(newSpan);
     mynewchat.appendChild(newcontent);
     document.getElementById("rightchatBox").appendChild(mynewchat);
+
+    scrollToBottom();
 }
 
 function friMessage(content){
-
     var frinewchat=document.createElement("div");
     frinewchat.classList.add("message","frnd_message");
 
@@ -114,6 +127,8 @@ function friMessage(content){
     newcontent.appendChild(newSpan);
     frinewchat.appendChild(newcontent);
     document.getElementById("rightchatBox").appendChild(frinewchat);
+
+    scrollToBottom();
 }
 
 function handleKeyPress(event) {
@@ -122,30 +137,43 @@ function handleKeyPress(event) {
     }
 }
 
-
 for(let i=0;i<cfPairs.length;i++){
-    
-    document.getElementById(cfPairs[i].character).onclick=function(){
-        curfriend=cfPairs[i];
+    document.getElementById(cfPairs[i].character).onclick = function () {
+        // Save the current history before switching
+        chatHistories[curfriend.character] = hist;
+
+        // Switch to the new friend and load their history
+        curfriend = cfPairs[i];
+        hist = chatHistories[curfriend.character];
+
         this.classList.add("active");
 
-        var chatbox=document.getElementById("rightchatBox");
+        var chatbox = document.getElementById("rightchatBox");
         while (chatbox.firstChild) {
             chatbox.removeChild(chatbox.firstChild);
         }
 
-        hist=[];
+        // Load the chat history of the new friend
+        hist.forEach(chat => {
+            if (chat.role === "user") {
+                myMessage(chat.content);
+            } else if (chat.role === "agent") {
+                friMessage(chat.content);
+            }
+        });
 
-        for(let j=0;j<cfPairs.length;j++){
-            if(j!=i){
+        for (let j = 0; j < cfPairs.length; j++) {
+            if (j != i) {
                 document.getElementById(cfPairs[j].character).classList.remove("active");
             }
         }
 
-        var curimg=document.getElementById("curimg");
-        curimg.setAttribute("src",cfPairs[i].file);
+        var curimg = document.getElementById("curimg");
+        curimg.setAttribute("src", cfPairs[i].file);
 
-        var curname=document.getElementById("curname");
-        curname.innerHTML=cfPairs[i].character + "<span>online</span>";
+        var curname = document.getElementById("curname");
+        curname.innerHTML = cfPairs[i].character + "<span>online</span>";
+
+        scrollToBottom();
     }
 }
