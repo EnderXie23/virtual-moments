@@ -289,6 +289,8 @@ const cfPairs = [
     { character: 'Tighnari', friend: 'Corei', place: 'Arusama'},
     { character: 'Iron', friend: 'Pepper', place: 'The U.S.'},
     { character: 'Jack', friend: 'Sailor', place: 'The Atlantic Ocean' },
+    { character: 'Jimmy', friend: 'Rachel', place: 'Tokyo' },
+    { character: 'Nick', friend: 'Judy', place: 'Zootopia' },
 ]
 
 // Add event listener to the new post button

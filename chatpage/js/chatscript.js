@@ -3,8 +3,10 @@ API_SERVER_URL = "http://localhost:54225/chat/"
 
 const cfPairs=[
     {character:"Furina",file:"../../webpage/photos/furina.png"},
-    {character:"Iron Man", file:"../../webpage/photos/iron.png"},
-    {character:"Jack Sparrow", file:"../../webpage/photos/jack.png"},
+    {character:"Iron", file:"../../webpage/photos/iron.png"},
+    {character:"Jimmy", file:"../../webpage/photos/jimmy.png"},
+    {character:"Nick", file:"../../webpage/photos/nick.png"},
+    {character:"Jack", file:"../../webpage/photos/jack.png"},
     {character:"Tighnari", file:"../../webpage/photos/tighnari.png"},
 ]
 
@@ -29,7 +31,6 @@ document.getElementById("curname").innerHTML=curfriend.character + "<span>online
 
 async function fetchResponse(prompt, character = 'None', history=[]){
     const url = API_SERVER_URL
-
     const data={
         "prompt":prompt,
         "character":character,
