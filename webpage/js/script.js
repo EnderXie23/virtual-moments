@@ -1,7 +1,7 @@
 // Initialize the feed
 document.addEventListener('DOMContentLoaded', () => {
     // Example usage of the function with some dummy data
-    createNewPost('Furina', 'photos/fpost.png', 'Fountaine', 'How do you like my new outfit~', {'Neuvillete': "Furina's new dress is fantastic!"});
+    createNewPost('Furina', 'photos/fpost.png', 'Fountaine', 'How do you like Fountaine's Star Furina's new outfit~', {'Neuvillete': "Furina's new dress is fantastic!"});
     createNewPost('Tighnari', 'photos/tighnari.png', 'Arusama', 'Having a great time in the forest!', {"Corei": "Are you out camping again?"});
     createNewPost('Iron', 'photos/ipost.png', 'The U.S.', "Built myself a cool new suit!", {"Pepper": "Iron Man is so talented!"});
 });
