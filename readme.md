@@ -1,7 +1,7 @@
 # My Virtual Moments Repository
 Now we have implemented the main functions of Virtual Moments.
 
-The main entrance is at `webpage/VM.html`. To fully unlock the functions we have implemented, you shall run `webpage/webapi.py`, `webui/chatapi.py` and `webui/chatui.py` on the remote server. The three python scripts shall run simultaneously.
+The main entrance is at `webpage/VM.html`. To fully unlock the functions we have implemented, you shall run `webpage/webapi.py` on the remote server.
 
 Congratulations! Now the HTML page can correctly call all the functions we have implemented.
 
