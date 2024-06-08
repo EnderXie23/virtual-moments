@@ -1,13 +1,16 @@
+// window.onload = function () {
+//     generateCharacterList();
+// }
 
 API_SERVER_URL = "http://localhost:54226/chat/" 
 
 const cfPairs=[
-    {character:"Furina",file:"../webpage/photos/furina.png"},
-    {character:"Iron", file:"../webpage/photos/iron.png"},
-    {character:"Jimmy", file:"../webpage/photos/jimmy.png"},
-    {character:"Nick", file:"../webpage/photos/nick.png"},
-    {character:"Jack", file:"../webpage/photos/jack.png"},
-    {character:"Tighnari", file:"../webpage/photos/tighnari.png"},
+    {character:"Furina", file:"../webpage/photos/furina.png", location:"Fountaine"},
+    {character:"Iron", file:"../webpage/photos/iron.png", location:"The U.S."},
+    {character:"Jimmy", file:"../webpage/photos/jimmy.png", location:"The Atlantic Ocean"},
+    {character:"Nick", file:"../webpage/photos/nick.png", location:"Zootopia"},
+    {character:"Jack", file:"../webpage/photos/jack.png", location:"Tokyo"},
+    {character:"Tighnari", file:"../webpage/photos/tighnari.png", location:"Sumeru"},
 ]
 
 var curfriend=cfPairs[0]
@@ -34,6 +37,69 @@ for(let i=0;i<cfPairs.length;i++){
 document.getElementById(curfriend.character).classList.add("active");
 document.getElementById("curimg").setAttribute("src",curfriend.file);
 document.getElementById("curname").innerHTML=curfriend.character + "<span>online</span>";
+
+// Function to generate character list dynamically
+function generateCharacterList() {
+    const chatlistDiv = document.querySelector(".chatlist");
+    cfPairs.forEach((cf, index) => {
+        const li = document.createElement("li");
+        li.id = cf.character;
+        li.classList.add("block");
+
+        const imgDiv = document.createElement("div");
+        imgDiv.classList.add("imgbx");
+
+        const img = document.createElement("img");
+        img.src = cf.file;
+        img.classList.add("cover");
+        imgDiv.appendChild(img);
+
+        const h4 = document.createElement("h4");
+        h4.textContent = cf.character;
+
+        const locationDiv = document.createElement("div");
+        locationDiv.classList.add("location");
+        locationDiv.textContent = cf.location;
+
+        li.appendChild(imgDiv);
+        li.appendChild(h4);
+        li.appendChild(locationDiv);
+        chatlistDiv.appendChild(li);
+
+        li.addEventListener("click", function () {
+            // Save the current history before switching
+            chatHistories[curfriend.character] = hist;
+
+            // Switch to the new friend and load their history
+            curfriend = cfPairs[index];
+            hist = chatHistories[curfriend.character];
+
+            const activeElement = document.querySelector(".active");
+            if (activeElement) {
+                activeElement.classList.remove("active");
+            }
+            li.classList.add("active");
+
+            var chatbox = document.getElementById("rightchatBox");
+            while (chatbox.firstChild) {
+                chatbox.removeChild(chatbox.firstChild);
+            }
+
+            // Load the chat history of the new friend
+            hist.forEach(chat => {
+                if (chat.role === "user") {
+                    myMessage(chat.content);
+                } else if (chat.role === "agent") {
+                    friMessage(chat.content);
+                }
+            });
+
+            document.getElementById("curimg").setAttribute("src", cf.file);
+            document.getElementById("curname").innerHTML = cf.character + "<span>online</span>";
+            scrollToBottom();
+        });
+    });
+}
 
 async function fetchResponse(prompt, character = 'None', history=[]){
     const url = API_SERVER_URL
@@ -136,6 +202,7 @@ function handleKeyPress(event) {
         getInput(); 
     }
 }
+
 
 for(let i=0;i<cfPairs.length;i++){
     document.getElementById(cfPairs[i].character).onclick = function () {
