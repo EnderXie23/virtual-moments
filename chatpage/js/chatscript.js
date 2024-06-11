@@ -79,7 +79,7 @@ function generateCharacterList() {
             chatHistories[curfriend.character] = hist;
 
             // Switch to the new friend and load their history
-            curfriend = cfPairs[index];
+            curfriend = additionalCharacters[index];
             hist = chatHistories[curfriend.character];
 
             const activeElement = document.querySelector(".active");
