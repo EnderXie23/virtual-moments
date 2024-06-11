@@ -1,6 +1,14 @@
-// window.onload = function () {
-//     generateCharacterList();
-// }
+const additionalCharacters = [
+    // { character: "YOUR_CHARACTER", file: "../webpage/photos/YOUR_PNG.png", location: "YOUR_LOCATION" },
+]
+
+window.onload = function () {
+    additionalCharacters.forEach((cf, index) => {
+        cfPairs.push(cf);
+        chatHistories[cf.character] = [];
+    });
+    generateCharacterList();
+}
 
 API_SERVER_URL = "http://localhost:54226/chat/" 
 
@@ -41,7 +49,7 @@ document.getElementById("curname").innerHTML=curfriend.character + "<span>online
 // Function to generate character list dynamically
 function generateCharacterList() {
     const chatlistDiv = document.querySelector(".chatlist");
-    cfPairs.forEach((cf, index) => {
+    additionalCharacters.forEach((cf, index) => {
         const li = document.createElement("li");
         li.id = cf.character;
         li.classList.add("block");

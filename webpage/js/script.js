@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createNewPost('Furina', 'photos/fpost.png', 'Fountaine', 'How do you like Fountaine\'s Star -- Furina\'s new outfit~', {'Neuvillete': "Furina's new dress is fantastic!"});
     createNewPost('Tighnari', 'photos/tighnari.png', 'Sumeru', 'Having a great time in the forest!', {"Corei": "Are you out camping again?"});
     createNewPost('Iron', 'photos/ipost.png', 'The U.S.', "Built myself a cool new suit!", {"Pepper": "Iron Man is so talented!"});
+    createNewPost('Jimmy', 'photos/jpost.jpg', 'Tokyo', "Just finished today\'s job as a detective!", {"Rachel": "Wow! It must have been a exciting experience!"});
 });
 
 // Fetch response from the server
