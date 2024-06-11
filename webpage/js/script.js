@@ -48,7 +48,7 @@ async function handleLikeButtonClick(button) {
 
     try {
         // Generate a comment based on the caption
-        const prompt = `A friend Ender liked your post: "${caption}". Write a comment to thank him WITHIN 15 words.`;
+        const prompt = `You said: "${caption}". your friend Ender thinks it is great. Write a comment to thank him WITHIN 15 words.`;
         const comment = await fetchResponse(prompt, postSender);
 
         if (comment) {
